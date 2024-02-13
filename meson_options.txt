@@ -1,0 +1,2 @@
+option('offline', type: 'boolean', value: 'false', yield: true,
+  description: 'Do not download anything (this is independant of Meson\'s internal subproject mechanisms).')

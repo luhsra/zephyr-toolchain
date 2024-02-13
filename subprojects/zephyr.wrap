@@ -1,0 +1,4 @@
+[wrap-git]
+url = git@scm.sra.uni-hannover.de:research/zephyrproject-rtos.git
+revision = ara
+depth = 1
