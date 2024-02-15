@@ -1,6 +1,8 @@
 project('zeyphr-toolchain', 'c',
   default_options : ['warning_level=3'])
 
+fs = import('fs')
+
 py3_mod = import('python')
 py3_inst = py3_mod.find_installation('python3')
 if py3_inst.language_version().version_compare('<3.10')
@@ -22,6 +24,16 @@ if not west.found()
     run_command(py3_inst, '-m', 'pip', 'install', f'--target=@west_dir@', 'west', check: true)
     west = find_program(west_dir / 'bin' / 'west')
   endif
+  conf_data = configuration_data()
+  conf_data.set('PYTHON', py3_inst.full_path())
+  conf_data.set('WEST', west.full_path())
+  conf_data.set('ENV', west_env)
+  west_wrapper = configure_file(input: files('west.py.in'),
+                                output: 'west_wrapper.py',
+                                configuration : conf_data)
+  west_wrap = fs.copyfile(west_wrapper, 'west.py')
+
+  summary('West installed locally. Use this wrapper', west_wrap.full_path())
 endif
 
 # setup zephyr

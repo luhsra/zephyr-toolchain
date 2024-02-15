@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""Wrapper for west installed with pip."""
+
+import subprocess
+import os
+
+env = dict([x.split("=") for x in "@ENV@".split(" ")])
+subprocess.run(["@PYTHON@", "@WEST@"], env={**os.environ, **env}, check=False)
