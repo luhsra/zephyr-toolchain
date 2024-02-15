@@ -17,7 +17,7 @@ file = west.yml
 
 
 def _update_hash(hash_o, file_path):
-    with open(file_path, 'rb') as f:
+    with open(file_path, "rb") as f:
         hash_o.update(f.read())
 
 
@@ -38,15 +38,17 @@ def check(args):
     if not _exists(west_config):
         return 1
     if not zephyr_dir.samefile(Path(args.rtos_dir)):
-        print(f'{zephyr_dir.absolute()} does not point to the '
-              'correct Zephyr directory.')
+        print(
+            f"{zephyr_dir.absolute()} does not point to the "
+            "correct Zephyr directory."
+        )
         return 2
     if not _exists(west_yml):
         return 3
     if not _exists(west_orig_hash):
         return 4
 
-    west_hash = hashlib.new('sha256')
+    west_hash = hashlib.new("sha256")
     _update_hash(west_hash, west_yml)
     _update_hash(west_hash, west_config)
     with open(west_orig_hash) as f:
@@ -84,26 +86,40 @@ def init(args):
 
     env = dict([x.split("=") for x in args.west_env.split(" ")])
     subprocess.run(
-        [sys.executable, args.west_path, "update"],
-        env=env, cwd=work_dir, check=True
+        [sys.executable, args.west_path, "update"], env=env, cwd=work_dir, check=True
     )
 
     # hash file about the current config
-    west_hash = hashlib.new('sha256')
-    _update_hash(west_hash, work_dir / 'zephyr' / 'west.yml')
-    _update_hash(west_hash, work_dir / '.west' / 'config')
-    with open(work_dir / '.west' / 'west.sha256', 'w') as f:
+    west_hash = hashlib.new("sha256")
+    _update_hash(west_hash, work_dir / "zephyr" / "west.yml")
+    _update_hash(west_hash, work_dir / ".west" / "config")
+    with open(work_dir / ".west" / "west.sha256", "w") as f:
         f.write(west_hash.hexdigest())
 
     return 0
 
 
+def list_modules(args):
+    work_dir = Path(args.working_dir)
+    west_env = dict([x.split("=") for x in args.west_env.split(" ")])
+    modules = subprocess.run(
+        [sys.executable, args.west_path, "list", "-f", r'{path}'],
+        env=west_env,
+        cwd=work_dir,
+        check=True,
+        stdout=subprocess.PIPE,
+    ).stdout.decode("UTF-8").strip('\n')
+    for mod in modules.split('\n'):
+        if mod == "zephyr":
+            continue
+        print((work_dir / mod).absolute())
+
+
 def main():
-    actions = {"check": check, "init": init}
+    actions = {"check": check, "init": init, "list-modules": list_modules}
     parser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__)
     parser.add_argument(
-        "action", choices=actions.keys(),
-        help="Action that should be performed."
+        "action", choices=actions.keys(), help="Action that should be performed."
     )
     parser.add_argument(
         "--rtos-dir", required=True, help="Path to the Zephyr RTOS repo."

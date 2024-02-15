@@ -70,3 +70,15 @@ if r.returncode() != 0
     check: true
   )
 endif
+
+r = run_command(
+  py3_inst, files('setup-zephyr.py'),
+  '--rtos-dir', zephyr_source_dir,
+  '--working-dir', zephyr_work_dir,
+  '--west-path', west.full_path(),
+  '--west-env', west_env,
+  'list-modules',
+  check: true
+)
+
+modules = r.stdout().strip().split('\n')
