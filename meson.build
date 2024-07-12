@@ -34,6 +34,10 @@ if not west.found()
   west_wrap = fs.copyfile(west_wrapper, 'west.py')
 
   summary('West installed locally. Use this wrapper', west_wrap.full_path())
+else
+  # The west_env variable is required for setup-zephyr.py to be set
+  # if west is installed get site-package default path
+  west_env = 'PYTHONPATH=' + run_command(py3_inst, '-c', 'import site; print(site.getsitepackages()[0])').stdout()
 endif
 
 # setup zephyr
