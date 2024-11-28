@@ -1,4 +1,4 @@
 [wrap-git]
-url = ssh://git@scm.sra.uni-hannover.de/research/zephyrproject-rtos.git
+url = ssh://git@scm.sra.uni-hannover.de/research/parrot-projects/zephyrproject-rtos.git
 revision = parrot-v3.7.0
 depth = 1
