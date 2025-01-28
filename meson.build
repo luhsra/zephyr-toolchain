@@ -4,7 +4,7 @@ project('zeyphr-toolchain', 'c',
 fs = import('fs')
 
 py3_mod = import('python')
-py3_inst = py3_mod.find_installation('python3')
+py3_inst = py3_mod.find_installation('python3', modules: 'yaml')
 if py3_inst.language_version().version_compare('<3.10')
   error('At least Python 3.10 is required.')
 endif
