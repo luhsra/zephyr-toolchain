@@ -1,5 +1,6 @@
 project('zeyphr-toolchain', 'c',
-  default_options : ['warning_level=3'])
+  default_options : ['warning_level=3'],
+  meson_version: '>=1.10.0', version: 'SRA\'26')
 
 fs = import('fs')
 
