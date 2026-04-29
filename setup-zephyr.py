@@ -86,7 +86,7 @@ def init(args):
 
     env = dict([x.split("=") for x in args.west_env.split(" ")])
     subprocess.run(
-        [sys.executable, args.west_path, "update"], env=env, cwd=work_dir, check=True
+        [sys.executable, args.west_path, "update", "--narrow"], env=env, cwd=work_dir, check=True
     )
 
     # hash file about the current config
